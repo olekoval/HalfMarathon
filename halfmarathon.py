@@ -42,25 +42,50 @@ class Phase2:
         return result_distance
     
     
-    def number_episodes__threshold(self, distance_interval: float) -> tuple:
+    def number_episodes_threshold(self, distance_interval: float, pace: str) -> tuple:
         """
         Метод расчитывает количество серий повторов в П-темпе
         
         Параметры:
-        distance_interval (float): дистанция интервала в км (1.6, 3.2)
+        distance_interval (float): дистанция интервала в км (1.6, 3.2) по плану
+        pace (str): темп '5:45'
         
         Возвращаемое значение:
-        int: Количество серий повторов в П-темпе.
+        tuple: Первое значение это количество интервалов (int), второе значение это
+        общее расстояние в П-темпе в км (float), третье (str)- 
         """
         if self.threshold_week_distance > 6.4:
             distance_threshold = 6.4
         else:
             distance_threshold = self.threshold_week_distance
             
-        nm = distance_threshold / distance_interval
-        nm = math.floor(nm) # округлить до целого в меньшую сторону    
-            
-        return (nm, distance_interval * nm)   
+        nm = distance_threshold / distance_interval # количество повторов сесии
+        nm = math.floor(nm) # количество повторов сесии округлить до целого в меньшую сторону
+        
+        # общее расстояние в П-темпе 
+        distance = distance_interval * nm
+
+        # расчет времени на преодоление дистанции 
+        minutes, seconds = map(int, pace.split(":"))# Преобразуем темп в минуты (десятичный формат)
+        pace_decimal = minutes + seconds / 60  # Темп переводится в десятичный формат для удобства вычислений.
+        time = distance_interval * pace_decimal # в десятичном формате
+        cool_down = time / 5 # для расчета времени восстановления на каждые 5 минут (по 1 минуте на каждые 5)
+        
+        # Перевод cool_down в формат минуты : секунды
+        minutes = int(cool_down) # Выделяем целые минуты
+        seconds = round((cool_down - minutes) * 60)# Переводим дробную часть в секунды
+        
+        # Сборка строки плана вида 3 х (1,6 км П + 1:50 отдых)
+        cool_down_time = f"{minutes}:{seconds:02}"
+        plan = f"{nm} x ({distance_interval} км П + {cool_down_time} отдых)"
+
+        # Расчет общей дистанции пробегаемой в восстановительном темпе
+        total_cool_down = cool_down * nm # общее время в восстановительном темпе
+        distance_cool_down = total_cool_down / (pace_decimal + 1.5) # увеличиваем пороговый темп на 1:30
+        
+        distance = round(distance + distance_cool_down, 2)
+
+        return (nm, distance, plan)   
          
     
     
