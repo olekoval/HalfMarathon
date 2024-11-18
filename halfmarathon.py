@@ -89,29 +89,37 @@ class Phase2:
          
     
     
-    def number_episodes_repeats(self, plan_repeats: tuple, number_training: int) -> tuple:
+    def number_episodes_repeats(self, plan_repeats: tuple, portion: float) -> tuple:
         """
         Метод расчитывает количество серий повторов в Пв-темпе
         
         Параметры:
         plan_repeats (tuple): Список повторов в тренировоке. Например ((200, 200), (200, 400))
                              первый элемент в кортеже дистанция в метрах Пв, второй - трусца
-        number_training (int): Номер К тренировки.
+        portion (float): Доля от недельного объема в Пв-темпе в данной тренировке от 0.1 до 1
 
         Возвращаемое значение:
         int: Количество серий повторов в Пв-темпе.
+        float: Общая дистанция тренировки
+        str: План тренировки
         
         """
-        wd = self.repeats_week_distance
-        if number_training == 1:
-            wd = wd * .75 # оставить 25% дистанции для второй тренировки
-            
+        wd = self.repeats_week_distance * portion # дистанция в темпе Пв
+          
         total_repeats = sum(pair[0] for pair in plan_repeats) / 1000
+        total_recovery = sum(pair[1] for pair in plan_repeats) / 1000
         nm = wd / total_repeats
         nm = math.floor(nm) # округлить до целого в меньшую сторону
-        if number_training == 1:
-            self.repeats_week_distance = self.repeats_week_distance - total_repeats * nm
+
+        distance = round(nm * (total_repeats + total_recovery), 2) # общая дистанция тренировки
+
+        # Сборка строки плана тренировки
+        plan = ""
+        for i in plan_repeats:
+            plan = f"{plan} + {i[0]} Пв/{i[1]} трусцой"
+
+        plan = f"{nm} х ({plan[3:]})"    
         
-        return (nm, total_repeats) 
+        return (nm, distance, plan) 
     
     
