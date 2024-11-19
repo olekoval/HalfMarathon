@@ -3,11 +3,11 @@ import openpyxl
 
 alldist = 60 # недельный обЪем, км
 time_long = 120 # минут длительного бега в Длительную тренировку
-long_pace = "6:45"  # длительн темп
+long_pace = "6:20"  # длительн темп
 repeats_1_plan = ((200, 200), (200, 400), (400, 200))
 repeats_2_plan = ((200, 200),)
 threshold_interval = 1.6 # дистанция порогового интервала, км
-threshold_pace = "5:45" # пороговый темп
+threshold_pace = "5:19" # пороговый темп
 
 
 p = halfmarathon.Phase2(alldist)
