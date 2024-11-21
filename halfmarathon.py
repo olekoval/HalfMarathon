@@ -104,7 +104,7 @@ class Phase2:
                              первый элемент в кортеже дистанция в метрах Пв, второй - трусца
         portion (float): Доля от недельного объема в Пв-темпе в данной тренировке от 0.1 до 1
 
-        Возвращаемое значение:
+        Возвращаемое значение: tuple
         int: Количество серий повторов в Пв-темпе.
         float: Общая дистанция тренировки
         str: План тренировки
@@ -129,11 +129,17 @@ class Phase2:
         return (nm, distance, plan) 
 
 
-    def calculate_distance_marathon(self, min_distance):
+    def calculate_distance_marathon(self, min_distance: float) -> tuple:
         """
         Метод разраховує дистанцію в тренуванні з М-темпом
 
-        Па
+        Параметри:
+        min_distance (float): Мінімальна дістанція в М-темпі в одному тренуванні (по плану 6.4 км)
+
+        Повертає: tuple
+        distance_marathon (float): Дистанція в тренуванні з М-темпом
+        plan (str): План тренування з М-темпом
+        
         """
         if self.marathon_week_distance > min_distance:
             distance_marathon = self.marathon_week_distance
