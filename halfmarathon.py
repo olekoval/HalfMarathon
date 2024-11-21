@@ -8,10 +8,16 @@ class Phase2:
     'От 800 метров до марафона' второе издание 
     """
     def __init__(self, week_distance):
+        """
+        Параметри:
+        week_distance: Загальний об'єм за тиждень, км
+        
+        """
         self.week_distance = week_distance # недельный километраж
         self.easy_week_distance = week_distance * 0.25 # max дистанция длительной тренировки
         self.repeats_week_distance = week_distance * 0.05 # max объем дистанций повторов в неделю
         self.threshold_week_distance = week_distance * 0.1 # max объем дистанций в пороговом темпе в неделю
+        self.marathon_week_distance = week_distance * 0.1 # max объем дистанций в марафонском темпе в неделю
         
     def calculate_distance_long(self, time_long: int, pace_long: str) -> float:
         """
@@ -52,7 +58,7 @@ class Phase2:
         
         Возвращаемое значение:
         tuple: Первое значение это количество интервалов (int), второе значение это
-        общее расстояние в П-темпе в км (float), третье (str)- 
+        общее расстояние в П-темпе в км (float), третье (str)- план тренировки
         """
         if self.threshold_week_distance > 6.4:
             distance_threshold = 6.4
@@ -121,5 +127,25 @@ class Phase2:
         plan = f"{nm} х ({plan[3:]})"    
         
         return (nm, distance, plan) 
-    
-    
+
+
+    def calculate_distance_marathon(self, min_distance):
+        """
+        Метод разраховує дистанцію в тренуванні з М-темпом
+
+        Па
+        """
+        if self.marathon_week_distance > min_distance:
+            distance_marathon = self.marathon_week_distance
+        else:
+            distance_marathon = min_distance
+
+        plan = f"{self.week_distance * 0.2 - distance_marathon} км в Л-темпе + {distance_marathon} км в М-темпе"    
+           
+        return (distance_marathon, plan)    
+         
+
+if __name__ == "__main__":
+    p_m = Phase2(60)
+    result = p_m.calculate_distance_marathon(6.4)
+    print(result[1])
