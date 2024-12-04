@@ -15,7 +15,7 @@ p = halfmarathon.Phase2(alldist)
 # Параметр Длительной тренировки
 distance_long = p.calculate_distance_long(time_long, long_pace)
 
-# Параметры первой тренировки Пв (вместе с П-темпом)
+# Параметры первой тренировки Пв - темп
 rep1 = p.number_episodes_repeats(repeats_1_plan, .75) # Пв-темп
 plan_rep1 = rep1[2]
 distance_rep1 = rep1[1]
@@ -42,7 +42,7 @@ ws['A1'] = "День недели"
 ws['B1'] = "Дистанция тренировки"
 ws['C1'] = "План тренировки"
 
-for i in [2, 4, 5, 7]:
+for i in [2, 4, 5, 7]: # 2 - Пн, 4 - Ср, 5 - Чт, 7 - Сб дни легких тренировок
     ws['B' + str(i)] = distance_easy
     if i < 7:
         ws['C' + str(i)] = "Л"
